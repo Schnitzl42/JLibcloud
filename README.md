@@ -4,7 +4,7 @@ JLibcloud
 Java wrapper for Apache's Libcloud
 (supports only the compute part so far and uses Libcloud 0.14.1)
 
-Examples on how to use libcloud can be found under org/askalon/jlibcloud/compute/examples.
+Examples on how to use JLibcloud can be found under org/askalon/jlibcloud/compute/examples.
 To use a pre-built version of JLibcloud add the jars from dist/ to your Java project.
 
 
