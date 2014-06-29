@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src-py/libcloud-trunk/demos/secrets.py=utf-8
+encoding//src-py/libcloud-trunk/javaimpl/compute/secrets.py=utf-8
+encoding//src-py/libcloud-trunk/libcloud/common/cloudsigma.py=utf-8
+encoding//src-py/libcloud-trunk/libcloud/compute/drivers/cloudsigma.py=utf-8

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<project name="JavaLibcloud" default="main" basedir=".">
+	
+	<property name="jsrc.dir" location="src-java" />
+	<property name="pysrc.dir" location="src-py" />
+	<property name="build.dir" location="bin" />
+	<property name="jythonBuild.dir" location="bin/jython" />
+	<property name="dist.dir" location="dist" />
+	<property name="doc.dir" location="doc" />
+	<property name="jython.dir" location="/usr/local/lib/jython2.5.3/" />
+	<!--<property name="jythonLib.dir" location="/usr/local/lib/jython2.5.3/Lib" />-->
+	<property name="pyCompile" location="src-java/build/CompilePyToClass" />
+	
+	<path id="classpath">
+			<fileset dir="${jython.dir}" includes="**/*.jar"/>
+	</path>
+	
+	<!-- Deletes the existing build, docs and dist directory-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	    <delete dir="${dist.dir}" />
+	</target>
+	
+	<!-- Creates the  build, docs and dist directory-->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+	    <mkdir dir="${dist.dir}" />
+	</target>
+	
+	
+	<!-- Compiles the java classes referencing the jython.jar-->
+	<target name="compile.java" depends="clean, makedir">
+		<javac srcdir="${jsrc.dir}" destdir="${build.dir}" classpathref="classpath" includeantruntime="false">
+	    </javac>
+	  </target>
+	
+
+	 <!--Creates the deployable jar file  -->
+	 <target name="jar" depends="compile.java">
+	 	<jar destfile="${dist.dir}\JavaLibcloudBuild.jar" basedir="${build.dir}">
+	  	</jar>
+	  </target>
+	
+	<!--Compiles the python classes to .class files -->
+	<target name="compile.py" depends="compile.java">
+		<!-- Compile classes in JLibcloud/libcloud-trunk -->
+		<java fork="true" classname="org.askalon.jlibcloud.compile.CompilePyToClass" classpathref="classpath">
+			<arg value="${pysrc.dir}" />
+			<classpath>
+				<pathelement location="./bin/"/>
+				<!--<pathelement location="."/>-->
+				<!--<pathelement location="./bin/build/CompilePyToClass"/>-->
+			</classpath>
+		</java>
+		<!-- Compile Jythons socket.py-->
+		<java fork="true" classname="org.askalon.jlibcloud.compile.CompilePyToClass" classpathref="classpath">
+					<arg value="${jython.dir}/Lib/socket.py" />
+					<classpath>
+						<pathelement location="./bin/"/>
+					</classpath>
+			</java>
+		<!-- copy compiled libclcoud files to bin directory -->
+		<copy todir="${build.dir}">
+			<fileset dir="${pysrc.dir}" >
+				<exclude name="**/*.py"/>
+			</fileset>
+		</copy>	
+	</target>
+	
+	<!--prepare full jython jar(needed for working jar) -->
+	<target name="jythonFull">
+		<mkdir dir="${jythonBuild.dir}" />
+		<copy file="${jython.dir}/jython.jar" tofile="${jythonBuild.dir}/jython-full.jar" />
+		<!-- copy Jythons Lib folder and the license files-->
+		<copy todir="${jythonBuild.dir}/Lib" >
+			<fileset dir="${jython.dir}/Lib"/>
+		</copy>
+		<copy todir="${jythonBuild.dir}">
+					<fileset dir="${jython.dir}" >
+						<include name="**/*.txt"/>
+					</fileset>
+		</copy>
+		<!-- create the NOTIC file for Jython -->
+		<touch file ="NOTICE.txt"/>
+		<echo file="NOTICE.txt">In file "Lib/socket.py" the line containing: ssl_socket.startHandshake()
+was commented out.</echo>
+		<move file="NOTICE.txt" todir="${jythonBuild.dir}"/>
+		<!-- create the jython-full.jar and move it to the /dist-->
+		<zip destfile="${jythonBuild.dir}/jython-full.jar" update="true">
+			<zipfileset dir="${jythonBuild.dir}" excludes="jython-full.jar"/>
+		</zip>
+		<move file="${jythonBuild.dir}/jython-full.jar" todir="${dist.dir}" />
+		<delete dir="${jythonBuild.dir}"/>
+	</target>
+		
+	<target name="doc">
+		<javadoc sourcepath="${jsrc.dir}" destdir="${doc.dir}"/>
+		<jar destfile="${dist.dir}\JavaLibcloudDoc.jar" basedir="${doc.dir}" />
+	</target>
+	
+	<target name="main" depends="compile.py, jythonFull, jar, doc">
+		<description>Main target</description>
+	</target>
+	
+	
+</project> 

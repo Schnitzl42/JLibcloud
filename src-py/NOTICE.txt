@@ -1,0 +1,130 @@
+This file lists the changes, that were done to Libcloud. 
+Libcloud is licensed under the Apache License 2.0.
+Visit http://www.apache.org/licenses/LICENSE-2.0 for more information.
+==========================================================
+Changes done for this project:
+
+1. added the folder javaimpl for 
+ project specific code.
+ 
+2. replaced:
+sock = socket.create_connection((self.host, self.port),
+                                            self.timeout)
+on line 98 of libcloud/httplib_ssl.py 
+with:
+sock = socket.create_connection((self.host, self.port))#,
+                                            #self.timeout)
+
+3. replaced:
+ if not pricing_file_path:
+        pricing_file_path = get_pricing_file_path(file_path=pricing_file_path)
+
+ with open(pricing_file_path) as fp:
+        content = fp.read()
+on line 88 of libcloud/pricing.py
+with:
+	#added to read the pricing file from within the jar
+    try:
+        from javaimpl.compute.utils import read_from_jar
+        content = read_from_jar('libcloud-trunk/libcloud/data/pricing.json')
+    except:
+        with open(pricing_file_path) as fp:
+            content = fp.read()
+
+
+==========================================================
+Changes with open pull request on Libclouds git repository:
+
+1. "from __future__ import with_statement"
+was added to this files:
+contrib/generate_provider_feature_matrix_table.py
+docs/examples/storage/s3/multipart_large_file_upload.py
+docs/examples/storage/s3/upload_object_acls.py
+libcloud/compute/drivers/libvirt_driver.py
+
+2. replaced: type       name ``str``
+   with:      :type       name: ``str``
+on line 403 of libcloud/compute/drivers/gogrid.py
+
+3. replaced: :type  location: :class:`NodeLocation`
+         	 :param location: Location from which to request a list of virtual
+                          networks. (optional)
+                          
+   with: :param location: Location from which to request a list of virtual
+                          networks. (optional)
+
+		  :type  location: :class:`NodeLocation`
+on line 415 of libcloud/compute/drivers/opennebula.py	
+
+4. replaced the body of: def _to_location(self, data):
+with:	if data:
+            return NodeLocation(
+                id=data['id'],
+                name=data['handle'],
+                country='GB',
+                driver=self
+                )
+        else:
+            return None	  
+ on line 121 of libcloud/compute/drivers/brightbox.py    
+ 
+5. replaced: :param resource: Resources to associate a tag with.
+        	  :type resource: ``list`` of :class:`libcloud.compute.base.Node` or
+with:    :param resources: Resources to associate a tag with.
+         :type resources: ``list`` of :class:`libcloud.compute.base.Node` or
+on line 1674 of libcloud/compute/drivers/cloudsigma.py  
+
+6. replaced: :param id: ID of the tag to retrieve.
+        	 :type id: ``str``
+with: :param tag_id: ID of the tag to retrieve.
+      :type tag_id: ``str``
+on line 1611 of libcloud/compute/drivers/cloudsigma.py  
+
+ 7. replaced: def list_images(self):
+ with: def list_images(self, location=None):
+on line 183 of libcloud/compute/drivers/brightbox.py  
+
+8. added: :keyword    ex_admin_pass: The root password for the node
+          :type       ex_admin_pass: ``str``
+on line 1225 of libcloud/compute/drivers/openstack.py  
+added: if 'ex_admin_pass' in kwargs:
+            server_params['adminPass'] = kwargs['ex_admin_pass']
+on line 1305 of libcloud/compute/drivers/openstack.py  
+
+9. replaced: :param      node: snapshot
+             :type       node: :class:`VolumeSnapshot`
+with: :param      snapshot: snapshot
+      :type       snapshot: :class:`VolumeSnapshot`
+on line 1641 of libcloud/compute/drivers/openstack.py  
+
+10. replaced: :param      node: volume
+              :type       node: :class:`StorageVolume`
+with: :param      volume: volume
+      :type       volume: :class:`StorageVolume`
+on line 1614 of libcloud/compute/drivers/openstack.py  
+
+11. replaced: :type       description: ``list`` of
+with:         :type       rules: ``list`` of
+on line 1050 of libcloud/compute/drivers/openstack.py 
+
+12.  replaced: 'Reboot': reboot}
+with: 		   'NoReboot': reboot}
+on line 1789 of libcloud/compute/drivers/ec2.py 
+
+13. replaced: :param      node: Node instance
+              :type       node: :class:`Node`
+with: :param      image: NodeImage instance
+      :type       image: :class:`NodeImage`
+on line 2918 of libcloud/compute/drivers/ec2.py 
+
+14. replaced: :param      node: EC2NetworkSubnet instance
+              :type       node: :class:`EC2NetworkSubnet`
+with: :param      subnet: EC2NetworkSubnet instance
+      :type       subnet: :class:`EC2NetworkSubnet`
+on line 2772 of libcloud/compute/drivers/ec2.py 
+
+15. replaced: :param     name: The group (required)
+              :type      name: :class:`NodeGroup`
+with: :param     group: The group (required)
+      :type      group: :class:`NodeGroup`
+on line 316 of libcloud/compute/drivers/abiquo.py 
