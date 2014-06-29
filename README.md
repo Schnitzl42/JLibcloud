@@ -30,8 +30,7 @@ To avoid conflicts with JLibcloud`s SSL module navigate to your Jython installat
 Enter the *Lib* folder and open the file *socket.py*. Comment
 out *ssl_socket.startHandshake()* using a *#*. The 
 *startHandshake()* method will be called from within JLibcloud.
-In Jython 2.5.3 the line is located in line 1720 and in Jython 2.5.4rc1 in line
- 1789. 
+In Jython 2.5.3 the line is located in line 1720 and in Jython 2.5.4rc1 in line 1789. 
 
 ### PyDev
 After installing Jython install the PyDev plugin for Eclipse. 
