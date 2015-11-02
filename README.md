@@ -48,3 +48,7 @@ If a section named "PyDev" is displayed the installation was successful. In
 "PyDev" - "Interpreters" select "Jython Interpreters". Click on "New" to add
 a new Jython interpreter. Enter a name like "jythonX.X.X" and browse the *jython.jar*.
 The *jython.jar* is located in the Jython installation directory (*/usr/local/lib/jython2.5.3/jython.jar*).
+
+#LICENSE
+This work is licensed under the Apache Commons License 2.0.
+http://www.apache.org/licenses/LICENSE-2.0
